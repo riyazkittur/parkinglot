@@ -9,6 +9,6 @@ namespace ParkingLot
     public class ParkingVehiCleDetails<T>
     {
         public T ParkedVehicle { get; set; }
-        public int ParkingSlotNumber { get; set; }
+        public ParkingSlot ParkingSlotDetails { get; set; }
     }
 }

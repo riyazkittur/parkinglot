@@ -11,34 +11,50 @@ namespace ParkingLot
       
         static void Main(string[] args)
         {
-            string command = String.Empty;
-            string[] commandDetails = null;
-            string inputCommand = String.Empty;
+            string command;
+            string[] commandDetails ;
+            string inputCommand ;
 
-            CarParkingLot carParkingLot = new CarParkingLot();
+            ParkingLot carParkingLot = new ParkingLot();
+         
+            UserCommandFactory commandFactory = new UserCommandFactory();
+            ICommand commandObject;
             Console.WriteLine("Welcome to parking lot");
-                   
+
         ReadCommand:
             command = Console.ReadLine();
             commandDetails = command.Split(' ');
-            inputCommand= commandDetails[0];
-            if (inputCommand == UserCommands.create_parking_lot.ToString())
-            {
-                carParkingLot.CreateParkingLotWithSize(commandDetails);
-                goto ReadCommand;
-            }
+            inputCommand = commandDetails[0];
+            UserCommands userCommand;
+            Enum.TryParse(inputCommand, out userCommand);
+            commandObject = commandFactory.GetCommandObject(userCommand);
+            commandObject.Execute(ref carParkingLot, command);
+            //if (inputCommand == UserCommands.create_parking_lot.ToString())
+            //{
+            //    int numberOfVehicles = int.Parse(commandDetails[1]);
+            //    carParkingLot.CreateParkingLot(numberOfVehicles);
+               
+            //    goto ReadCommand;
+            //}
 
-            else if (inputCommand == UserCommands.park.ToString())
-            {
-                carParkingLot.RegisterParking(commandDetails);
-                goto ReadCommand;
-            }
-            else if (inputCommand == UserCommands.leave.ToString())
-            {
-                carParkingLot.ExitParking(commandDetails);                   
-                goto ReadCommand;              
-            }
-            else if (inputCommand == UserCommands.status.ToString())
+            //else if (inputCommand == UserCommands.park.ToString())
+            //{
+            //    Car enteredCar = new Car()
+            //    {
+            //        RegistrationNumber = commandDetails[1],
+            //        Color = commandDetails[2]
+            //    };
+            //    carParkingLot.RegisterParking(enteredCar);
+            //    goto ReadCommand;
+            //}
+            //else if (inputCommand == UserCommands.leave.ToString())
+            //{
+            //    int slotToRelease = int.Parse(commandDetails[1]);
+            //    ParkingSlot parkingSlot = carParkingLot.ParkingSlots.Where(s => s.SlotNumber == slotToRelease).FirstOrDefault();
+            //    carParkingLot.ExitParking(parkingSlot);
+            //    goto ReadCommand;
+            //}
+             if (inputCommand == UserCommands.status.ToString())
             {
                 carParkingLot.GetParkingLotStatus();
                 goto ReadCommand;
@@ -58,7 +74,7 @@ namespace ParkingLot
                 carParkingLot.GetParkedVehicleRegisteredNumberByColor(commandDetails[1]);
                 goto ReadCommand;
             }
-            else if(inputCommand == UserCommands.close.ToString())
+            else if (inputCommand == UserCommands.close.ToString())
             {
                 Console.WriteLine("Closing parking lot");
             }

@@ -9,10 +9,10 @@ namespace ParkingLot
     public interface IParkingLot
     {
 
-        int GetAvailabeSlotNumber();
-        void RegisterParking(string[] carDetails);
-        void CreateParkingLotWithSize(string[] commandDetails);
-        void ExitParking(string[] commandDetails);
+        ParkingSlot GetAvailabeSlotNumber();
+        void RegisterParking(Vehicle enteredVehicle);
+        //void CreateParkingLotWithSize(int levelNumber,int slotsInLevel);
+        void ExitParking(ParkingSlot slotToRelease);
         void GetParkingLotStatus();
         void GetParkedVehicleRegisteredNumberByColor(string color);
         void GetSlotNumbersByVehicleColor(string color);

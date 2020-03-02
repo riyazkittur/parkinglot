@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace ParkingLot
 {
-    public class Car
+    public class Car : Vehicle
+    {
+       
+    }
+    public class Vehicle
     {
         public string RegistrationNumber { get; set; }
         public string Color { get; set; }
+
     }
 }
