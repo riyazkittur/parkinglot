@@ -26,8 +26,9 @@ namespace ParkingLot
                 {
                     ParkingSlots.Add(new ParkingSlot() { Level=level,SlotNumber = i + 1, IsAvailable = true });
                 }
+            }
                 Console.WriteLine($"Created a parking lot");
-            }        
+
 
         }
         public ParkingSlot GetAvailabeSlotNumber()
@@ -79,7 +80,7 @@ namespace ParkingLot
                 ParkingSlots.Where(x => x.SlotNumber == slotToRelease.SlotNumber).FirstOrDefault().IsAvailable = true;
                 ParkingVehiCleDetails<Vehicle> carToRelease = ParkedVehicles.Where(p => p.ParkingSlotDetails == slotToRelease).FirstOrDefault();
                 ParkedVehicles.Remove(carToRelease);
-                Console.WriteLine($"Slot number {slotToRelease} is free");
+                Console.WriteLine($"Slot number {slotToRelease.SlotNumber} in LEVEL {slotToRelease.SlotNumber} is free");
             }
 
         }
@@ -87,7 +88,7 @@ namespace ParkingLot
         {
             foreach (ParkingVehiCleDetails<Vehicle> parkingCar in ParkedVehicles)
             {
-                Console.WriteLine($"park {parkingCar.ParkedVehicle.RegistrationNumber} {parkingCar.ParkedVehicle.Color} {parkingCar.ParkingSlotDetails.Level} {parkingCar.ParkingSlotDetails.SlotNumber}");
+                Console.WriteLine($"park {parkingCar.ParkedVehicle.RegistrationNumber} {parkingCar.ParkedVehicle.Color} in Level : {parkingCar.ParkingSlotDetails.Level}  Slot:{parkingCar.ParkingSlotDetails.SlotNumber}");
             }
         }
         public void GetParkedVehicleRegisteredNumberByColor(string color)
@@ -125,6 +126,7 @@ namespace ParkingLot
                 {
                     slots = slots + "," + slotDetail.Level+"-"+slotDetail.SlotNumber.ToString();
                 }
+                slots = slots.Substring(1, slots.Length);
                 Console.WriteLine(slots);
             }
 
@@ -134,7 +136,7 @@ namespace ParkingLot
             var slotDetail = ParkedVehicles.Where(c => c.ParkedVehicle.RegistrationNumber == registeredNumber)
                .Select(p => p.ParkingSlotDetails).FirstOrDefault();
 
-            if (slotDetail.SlotNumber == 0)
+            if (slotDetail== null)
             {
                 Console.WriteLine("Not Found");
             }

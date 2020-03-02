@@ -12,28 +12,23 @@ namespace ParkingLot
         static void Main(string[] args)
         {
             string command;
-            string[] commandDetails ;
-            string inputCommand ;
 
-            ParkingLot carParkingLot = new ParkingLot();
-         
+            ParkingLot carParkingLot = new ParkingLot();        
             UserCommandFactory commandFactory = new UserCommandFactory();
             ICommand commandObject;
             Console.WriteLine("Welcome to parking lot");
 
         ReadCommand:
-            command = Console.ReadLine();
-            commandDetails = command.Split(' ');
-            inputCommand = commandDetails[0];
-            UserCommands userCommand;
-            Enum.TryParse(inputCommand, out userCommand);
+            command = Console.ReadLine();          
+            Enum.TryParse(ReadCommand.GetCommandKeyWork(command), out UserCommand userCommand);
             commandObject = commandFactory.GetCommandObject(userCommand);
             commandObject.Execute(ref carParkingLot, command);
+            goto ReadCommand;
             //if (inputCommand == UserCommands.create_parking_lot.ToString())
             //{
             //    int numberOfVehicles = int.Parse(commandDetails[1]);
             //    carParkingLot.CreateParkingLot(numberOfVehicles);
-               
+
             //    goto ReadCommand;
             //}
 
@@ -54,35 +49,35 @@ namespace ParkingLot
             //    carParkingLot.ExitParking(parkingSlot);
             //    goto ReadCommand;
             //}
-             if (inputCommand == UserCommands.status.ToString())
-            {
-                carParkingLot.GetParkingLotStatus();
-                goto ReadCommand;
-            }
-            else if (inputCommand == UserCommands.slot_numbers_for_cars_with_colour.ToString())
-            {
-                carParkingLot.GetSlotNumbersByVehicleColor(commandDetails[1]);
-                goto ReadCommand;
-            }
-            else if (inputCommand == UserCommands.slot_number_for_registration_number.ToString())
-            {
-                carParkingLot.GetSlotNumberByRegisteredNumber(commandDetails[1]);
-                goto ReadCommand;
-            }
-            else if (inputCommand == UserCommands.registration_numbers_for_cars_with_colour.ToString())
-            {
-                carParkingLot.GetParkedVehicleRegisteredNumberByColor(commandDetails[1]);
-                goto ReadCommand;
-            }
-            else if (inputCommand == UserCommands.close.ToString())
-            {
-                Console.WriteLine("Closing parking lot");
-            }
-            else
-            {
-                Console.WriteLine("Invalid Command");
-                goto ReadCommand;
-            }
+            // if (inputCommand == UserCommands.status.ToString())
+            //{
+            //    carParkingLot.GetParkingLotStatus();
+            //    goto ReadCommand;
+            //}
+            //else if (inputCommand == UserCommands.slot_numbers_for_cars_with_colour.ToString())
+            //{
+            //    carParkingLot.GetSlotNumbersByVehicleColor(commandDetails[1]);
+            //    goto ReadCommand;
+            //}
+            //else if (inputCommand == UserCommands.slot_number_for_registration_number.ToString())
+            //{
+            //    carParkingLot.GetSlotNumberByRegisteredNumber(commandDetails[1]);
+            //    goto ReadCommand;
+            //}
+            //else if (inputCommand == UserCommands.registration_numbers_for_cars_with_colour.ToString())
+            //{
+            //    carParkingLot.GetParkedVehicleRegisteredNumberByColor(commandDetails[1]);
+            //    goto ReadCommand;
+            //}
+            //else if (inputCommand == UserCommands.close.ToString())
+            //{
+            //    Console.WriteLine("Closing parking lot");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Invalid Command");
+            //    goto ReadCommand;
+            //}
 
 
         }
