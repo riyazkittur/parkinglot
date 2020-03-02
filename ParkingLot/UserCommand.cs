@@ -22,7 +22,12 @@ namespace ParkingLot
         public static int GetNumberOfVehiclesFromCommand(string command)
         {
             string[] commandDetails = SplitCommand(command);
-            var isNumber = int.TryParse(commandDetails[1], out int numberOfVehicles);
+            int numberOfVehicles = 0;
+            if (commandDetails.Length < 2)
+            {
+                return numberOfVehicles;
+            }
+            var isNumber = int.TryParse(commandDetails[1], out  numberOfVehicles);
             return isNumber?numberOfVehicles:0;
         }
         public static string[] SplitCommand(string command)
@@ -32,35 +37,53 @@ namespace ParkingLot
         public static Vehicle GetVehicleFromCommand(string command)
         {
             string[] commandDetails = SplitCommand(command);
-            Vehicle enteredCar = new Car()
+            Vehicle enteredCar=null;
+            if (commandDetails.Length == 3)
             {
-                RegistrationNumber = commandDetails[1],
-                Color = commandDetails[2]
-            };
+                enteredCar = new Car()
+                {
+                    RegistrationNumber = commandDetails[1],
+                    Color = commandDetails[2]
+                };
+            }
+             
             return enteredCar;
 
         }
         public static int GetParkingSlotFromCommand(string command)
         {
             string[] commandDetails = SplitCommand(command);
-            var isNumber = int.TryParse(commandDetails[1], out int slotNumber);
+            bool isNumber = false;
+            int slotNumber=0;
+            if (commandDetails.Length == 2)
+            {
+                isNumber = int.TryParse(commandDetails[1], out  slotNumber);
+            }
+             
             return isNumber ? slotNumber : 0;          
         }
-        public static string GetColorFromCommand(string command)
+        public static string GetSearchParamFromCommand(string command)
         {
             string[] commandDetails = SplitCommand(command);
-            return commandDetails[1];
+            return commandDetails.Length==2?commandDetails[1]:null;
         }
-        public static string GetRegisteredNumberFromCommand(string command)
-        {
-            string[] commandDetails = SplitCommand(command);
-            return commandDetails[1];
-        }
-        public static string GetCommandKeyWork(string command)
+        //public static string GetRegisteredNumberFromCommand(string command)
+        //{
+        //    string[] commandDetails = SplitCommand(command);
+        //    return commandDetails[1];
+        //}
+        public static string GetCommandKeyWord(string command)
         {
             string[] commandDetails = SplitCommand(command);
             return commandDetails[0];
         }
-       
+        public static bool IsValidCommand(string command)
+        {
+           
+            bool IsValid = Enum.TryParse(ReadCommand.GetCommandKeyWord(command), out UserCommand userCommand);
+            return IsValid;
+
+        }
+
     }
 }

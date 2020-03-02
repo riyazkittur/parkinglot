@@ -11,8 +11,7 @@ namespace ParkingLot
         void Execute(ref ParkingLot parking,string command);
     }
     public class CreateParkingLot : ICommand
-    {
-       
+    {  
 
         public void Execute(ref ParkingLot parking, string command)
         {          
@@ -35,8 +34,16 @@ namespace ParkingLot
         public void Execute(ref ParkingLot parking, string command)
         {
             int slotToRelease = ReadCommand.GetParkingSlotFromCommand(command);
-           ParkingSlot parkingSlot = parking.ParkingSlots.Where(s => s.SlotNumber == slotToRelease).FirstOrDefault();
-            parking.ExitParking(parkingSlot);
+            if (slotToRelease == 0)
+            {
+                Console.WriteLine("Slot not found");
+            }
+            else
+            {
+                ParkingSlot parkingSlot = parking.ParkingSlots.Where(s => s.SlotNumber == slotToRelease).FirstOrDefault();
+                parking.ExitParking(parkingSlot);
+            }
+           
         }
     }
 
@@ -52,7 +59,7 @@ namespace ParkingLot
      
         public void Execute(ref ParkingLot parking, string command)
         {
-            parking.GetSlotNumbersByVehicleColor(ReadCommand.GetColorFromCommand(command));
+            parking.GetSlotNumbersByVehicleColor(ReadCommand.GetSearchParamFromCommand(command));
         }
     }
     public class GetSlotsByRegisteredNumber : ICommand
@@ -60,7 +67,7 @@ namespace ParkingLot
       
         public void Execute(ref ParkingLot parking, string command)
         {
-            parking.GetSlotNumberByRegisteredNumber(ReadCommand.GetRegisteredNumberFromCommand(command));
+            parking.GetSlotNumberByRegisteredNumber(ReadCommand.GetSearchParamFromCommand(command));
         }
     }
     public class GetRegisteredNumberByColor : ICommand
@@ -68,7 +75,7 @@ namespace ParkingLot
        
         public void Execute(ref ParkingLot parking, string command)
         {
-            parking.GetParkedVehicleRegisteredNumberByColor(ReadCommand.GetColorFromCommand(command));
+            parking.GetParkedVehicleRegisteredNumberByColor(ReadCommand.GetSearchParamFromCommand(command));
         }
     }
 
