@@ -23,10 +23,6 @@ namespace ParkingLot
         {
             string[] commandDetails = SplitCommand(command);
             int numberOfVehicles = 0;
-            if (commandDetails.Length < 2)
-            {
-                return numberOfVehicles;
-            }
             var isNumber = int.TryParse(commandDetails[1], out  numberOfVehicles);
             return isNumber?numberOfVehicles:0;
         }
@@ -37,17 +33,14 @@ namespace ParkingLot
         public static Vehicle GetVehicleFromCommand(string command)
         {
             string[] commandDetails = SplitCommand(command);
-            Vehicle enteredCar=null;
-            if (commandDetails.Length == 3)
-            {
-                enteredCar = new Car()
-                {
-                    RegistrationNumber = commandDetails[1],
-                    Color = commandDetails[2]
-                };
-            }
+            Enum.TryParse(commandDetails[3], out VehicleType vehicleType);
+            Vehicle enteredVehicle = VehicleFactory.GetVehicle(vehicleType);
+            enteredVehicle.RegistrationNumber = commandDetails[1];
+            enteredVehicle.Color = commandDetails[2];
              
-            return enteredCar;
+
+
+            return enteredVehicle;
 
         }
         public static int GetParkingSlotFromCommand(string command)
@@ -55,17 +48,14 @@ namespace ParkingLot
             string[] commandDetails = SplitCommand(command);
             bool isNumber = false;
             int slotNumber=0;
-            if (commandDetails.Length == 2)
-            {
-                isNumber = int.TryParse(commandDetails[1], out  slotNumber);
-            }
-             
-            return isNumber ? slotNumber : 0;          
+           isNumber = int.TryParse(commandDetails[1], out  slotNumber);
+         
+           return isNumber ? slotNumber : 0;          
         }
         public static string GetSearchParamFromCommand(string command)
         {
             string[] commandDetails = SplitCommand(command);
-            return commandDetails.Length==2?commandDetails[1]:null;
+            return commandDetails[1];
         }
         //public static string GetRegisteredNumberFromCommand(string command)
         //{
@@ -77,13 +67,13 @@ namespace ParkingLot
             string[] commandDetails = SplitCommand(command);
             return commandDetails[0];
         }
-        public static bool IsValidCommand(string command)
-        {
+        //public static bool IsValidCommand(string command)
+        //{
            
-            bool IsValid = Enum.TryParse(ReadCommand.GetCommandKeyWord(command), out UserCommand userCommand);
-            return IsValid;
+        //    bool IsValid = Enum.TryParse(ReadCommand.GetCommandKeyWord(command), out UserCommand userCommand);
+        //    return IsValid;
 
-        }
+        //}
 
     }
 }

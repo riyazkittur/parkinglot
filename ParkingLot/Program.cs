@@ -18,9 +18,14 @@ namespace ParkingLot
             ICommand commandObject;
             Console.WriteLine("Welcome to parking lot");
 
-        ReadCommand:
+            //ReadCommand:
+            while (true)
+            {
+
+           
             command = Console.ReadLine();
-            if (ReadCommand.IsValidCommand(command))
+                ValidateParam validateParam = new ValidateParam();
+            if (validateParam.IsValidCommand(command))
             {
                 Enum.TryParse(ReadCommand.GetCommandKeyWord(command), out UserCommand userCommand);
                 commandObject = commandFactory.GetCommandObject(userCommand);
@@ -30,9 +35,9 @@ namespace ParkingLot
             {
                 Console.WriteLine("Invalid Command");
             }
-            
-            goto ReadCommand;
-            
+            }
+            //goto ReadCommand;
+
         }
        
 

@@ -34,7 +34,7 @@ namespace ParkingLot
                 }
                 Console.WriteLine($"Created a parking lot");
             }
-            
+
 
 
         }
@@ -47,12 +47,12 @@ namespace ParkingLot
         }
         public void RegisterParking(Vehicle enteredVehicle)
         {
-            if (enteredVehicle == null)
-            {
-                Console.WriteLine("Invalid car details");
-            }
-           
-            else
+            //if (enteredVehicle == null)
+            //{
+            //    Console.WriteLine("Invalid car details");
+            //}
+
+            if (enteredVehicle != null)
             {
                 var existingParkingLot = GetParkingSlotByRegisteredNumber(enteredVehicle.RegistrationNumber);
                 if (existingParkingLot != null)
@@ -74,14 +74,10 @@ namespace ParkingLot
                     }
                     else
                     {
-
+                        enteredVehicle.EntryDateTime = DateTime.Now;
                         ParkingVehiCleDetails<Vehicle> registered = new ParkingVehiCleDetails<Vehicle>()
                         {
-                            ParkedVehicle = new Car()
-                            {
-                                RegistrationNumber = enteredVehicle.RegistrationNumber,
-                                Color = enteredVehicle.Color
-                            },
+                            ParkedVehicle = enteredVehicle,
                             ParkingSlotDetails = availableSlot
                         };
                         ParkedVehicles.Add(registered);
@@ -91,11 +87,11 @@ namespace ParkingLot
                     }
                 }
             }
-           
 
 
 
-        }        
+
+        }
         public void ExitParking(ParkingSlot slotToRelease)
         {
 
@@ -106,97 +102,87 @@ namespace ParkingLot
             else
             {
                 ParkingSlots.Where(x => x.SlotNumber == slotToRelease.SlotNumber).FirstOrDefault().IsAvailable = true;
-                ParkingVehiCleDetails<Vehicle> carToRelease = ParkedVehicles.Where(p => p.ParkingSlotDetails == slotToRelease).FirstOrDefault();
-                ParkedVehicles.Remove(carToRelease);
-                Console.WriteLine($"Slot number {slotToRelease.SlotNumber} in LEVEL {slotToRelease.Level} is free");
+                ParkingVehiCleDetails<Vehicle> vehicleToRelease = ParkedVehicles.Where(p => p.ParkingSlotDetails == slotToRelease).FirstOrDefault();
+                ParkedVehicles.Remove(vehicleToRelease);
+                float BillAmount = vehicleToRelease.ParkedVehicle.BillAmount();
+                Console.WriteLine($"Entry :{vehicleToRelease.ParkedVehicle.EntryDateTime} Exit:{DateTime.Now} Bill Amount : {BillAmount} Slot number {slotToRelease.SlotNumber} in LEVEL {slotToRelease.Level} is free");
             }
 
         }
         public void GetParkingLotStatus()
         {
+            if (ParkedVehicles.Count == 0)
+            {
+                Console.WriteLine("No cars are parked");
+            }
             foreach (ParkingVehiCleDetails<Vehicle> parkingCar in ParkedVehicles
-                .OrderBy(x=>x.ParkingSlotDetails.Level)
-                .ThenBy(s=>s.ParkingSlotDetails.SlotNumber))
+                .OrderBy(x => x.ParkingSlotDetails.Level)
+                .ThenBy(s => s.ParkingSlotDetails.SlotNumber))
             {
                 Console.WriteLine($"park {parkingCar.ParkedVehicle.RegistrationNumber} {parkingCar.ParkedVehicle.Color} in Level : {parkingCar.ParkingSlotDetails.Level}  Slot:{parkingCar.ParkingSlotDetails.SlotNumber}");
             }
         }
         public void GetParkedVehicleRegisteredNumberByColor(string color)
         {
-            if (color == null)
+
+            var filteredCars = ParkedVehicles.Where(c => c.ParkedVehicle.Color.ToUpper() == color.ToUpper())
+             .Select(p => p.ParkedVehicle.RegistrationNumber).ToList<string>();
+
+            if (filteredCars.Count == 0)
             {
-                Console.WriteLine("Invalid command");
+                Console.WriteLine("Not Found");
             }
             else
             {
-                var filteredCars = ParkedVehicles.Where(c => c.ParkedVehicle.Color.ToUpper() == color.ToUpper())
-                 .Select(p => p.ParkedVehicle.RegistrationNumber).ToList<string>();
-
-                if (filteredCars.Count == 0)
+                foreach (string regNumber in filteredCars)
                 {
-                    Console.WriteLine("Not Found");
+                    Console.WriteLine(regNumber);
                 }
-                else
-                {
-                    foreach (string regNumber in filteredCars)
-                    {
-                        Console.WriteLine(regNumber);
-                    }
-                }
-
             }
+
+
 
 
         }
         public void GetSlotNumbersByVehicleColor(string color)
         {
-            if (color == null)
+
+            var filteredCars = ParkedVehicles.Where(c => c.ParkedVehicle.Color.ToUpper() == color.ToUpper())
+           .Select(p => p.ParkingSlotDetails).ToList();
+
+            if (filteredCars.Count == 0)
             {
-                Console.WriteLine("Invalid command");
+                Console.WriteLine("Not Found");
             }
             else
             {
-                var filteredCars = ParkedVehicles.Where(c => c.ParkedVehicle.Color.ToUpper() == color.ToUpper())
-               .Select(p => p.ParkingSlotDetails).ToList();
-
-                if (filteredCars.Count == 0)
+                string slots = String.Empty;
+                foreach (ParkingSlot slotDetail in filteredCars)
                 {
-                    Console.WriteLine("Not Found");
+                    slots = slots + "," + slotDetail.Level + "-" + slotDetail.SlotNumber.ToString();
                 }
-                else
-                {
-                    string slots = String.Empty;
-                    foreach (ParkingSlot slotDetail in filteredCars)
-                    {
-                        slots = slots + "," + slotDetail.Level + "-" + slotDetail.SlotNumber.ToString();
-                    }
-                    slots = slots.Substring(1, slots.Length);
-                    Console.WriteLine(slots);
-                }
+               // slots = slots.Substring(1, slots.Length);
+                Console.WriteLine(slots);
             }
-            
+
+
 
         }
         public void GetSlotNumberByRegisteredNumber(string registeredNumber)
         {
-            if (registeredNumber == null)
+
+            var slotDetail = GetParkingSlotByRegisteredNumber(registeredNumber);
+
+            if (slotDetail == null)
             {
-                Console.WriteLine("Invalid command");
+                Console.WriteLine("Not Found");
             }
             else
             {
-                var slotDetail = GetParkingSlotByRegisteredNumber(registeredNumber);
-
-                if (slotDetail == null)
-                {
-                    Console.WriteLine("Not Found");
-                }
-                else
-                {
-                    Console.WriteLine($"Slot Number for {registeredNumber}: {slotDetail.Level} - {slotDetail.SlotNumber.ToString()}");
-                }
+                Console.WriteLine($"Slot Number for {registeredNumber}: {slotDetail.Level} - {slotDetail.SlotNumber.ToString()}");
             }
-          
+
+
 
         }
         public ParkingSlot GetParkingSlotByRegisteredNumber(string registeredNumber)
@@ -204,12 +190,8 @@ namespace ParkingLot
             return ParkedVehicles.Where(c => c.ParkedVehicle.RegistrationNumber.ToUpper() == registeredNumber.ToUpper())
              .Select(p => p.ParkingSlotDetails).FirstOrDefault();
         }
+        
 
     }
-    public class ParkingSlot
-    {
-        public int Level { get; set; }
-        public int SlotNumber { get; set; }
-        public bool IsAvailable { get; set; }
-    }
+
 }
